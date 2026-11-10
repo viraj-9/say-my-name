@@ -1,6 +1,7 @@
 # The Heisenberg Files — cinematic fan experience
 
-A responsive, dark-cinematic Breaking Bad fan-site concept.
+A responsive, dark-cinematic Breaking Bad fan-site concept. Created for fun purpose.
+Visit here - https://say-my-name-six.vercel.app/
 
 ## Run locally
 
