@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+  <defs>
+    <!-- Slightly intensified light-cyan aura on hover -->
+    <filter id="p-glow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="0" stdDeviation="2.0" flood-color="#00f5ff" flood-opacity="0.95"/>
+    </filter>
+  </defs>
+  <g filter="url(#p-glow)">
+    <!-- Facet 1: Left body -->
+    <polygon points="2,2 6,15 12,28 9,14" fill="#00b4d8" />
+    <!-- Facet 2: Main body -->
+    <polygon points="2,2 9,14 12,28 17,12" fill="#00f0ff" />
+    <!-- Facet 3: Lit face -->
+    <polygon points="2,2 17,12 12,28 22,11" fill="#8ef5ff" />
+    <!-- Facet 4: Spine -->
+    <polygon points="2,2 10,7 17,12 9,8" fill="#ffffff" />
+    <!-- Center white glint -->
+    <polygon points="2,2 7,4 4,7" fill="#ffffff" />
+    <!-- Refraction lines -->
+    <polyline points="2,2 9,14 12,28" fill="none" stroke="#ffffff" stroke-width="0.9" />
+    <polygon points="2,2 6,15 12,28 22,11" fill="none" stroke="#e0fcff" stroke-width="0.9" />
+  </g>
+</svg>

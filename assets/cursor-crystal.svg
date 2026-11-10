@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+  <defs>
+    <!-- Crisp, bright light-cyan luminescence (clean, not over-diffused) -->
+    <filter id="c-glow" x="-25%" y="-25%" width="150%" height="150%">
+      <feDropShadow dx="0" dy="0.6" stdDeviation="1.4" flood-color="#00f0ff" flood-opacity="0.85"/>
+    </filter>
+  </defs>
+  <g filter="url(#c-glow)">
+    <!-- Facet 1: Left shadow body (vivid bright cerulean) -->
+    <polygon points="2,2 5,14 11,26 8,13" fill="#009edb" />
+    <!-- Facet 2: Center main body (electric light cyan) -->
+    <polygon points="2,2 8,13 11,26 15,11" fill="#00e5ff" />
+    <!-- Facet 3: Right lit facet (light crystalline aqua) -->
+    <polygon points="2,2 15,11 11,26 19,10" fill="#7ceeff" />
+    <!-- Facet 4: Top spine highlight (bright luminous pale cyan) -->
+    <polygon points="2,2 9,6 15,11 8,7" fill="#e8fcff" />
+    <!-- Spark tip: crisp pure white glint at pointing coordinate -->
+    <polygon points="2,2 6,4 4,6" fill="#ffffff" />
+    <!-- Facet interior refraction lines -->
+    <polyline points="2,2 8,13 11,26" fill="none" stroke="#ffffff" stroke-width="0.8" opacity="0.9" />
+    <polyline points="2,2 15,11 11,26" fill="none" stroke="#bdf6ff" stroke-width="0.75" opacity="0.9" />
+    <!-- Clean outer rim -->
+    <polygon points="2,2 5,14 11,26 19,10" fill="none" stroke="#d4f9ff" stroke-width="0.8" />
+  </g>
+</svg>

@@ -1,0 +1,309 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#050906" />
+  <meta name="description" content="An atmospheric, interactive fan-made tribute to the world of Breaking Bad." />
+  <title>SAY MY NAME - A Breaking Bad Experience</title>
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800;900&family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <script src="smoke-engine.js" defer></script>
+  <script src="audio-engine.js" defer></script>
+  <script src="shatter-engine.js" defer></script>
+  <script src="cook-controller.js" defer></script>
+  <script src="scroll-controller.js" defer></script>
+  <script src="script.js" defer></script>
+</head>
+
+<body>
+  <audio id="bg-song" loop preload="auto">
+    <source src="assets/song.mp3" type="audio/mpeg" />
+    <source src="assets/song.m4a" type="audio/mp4" />
+    <source src="assets/song.ogg" type="audio/ogg" />
+    <source src="assets/song.wav" type="audio/wav" />
+  </audio>
+  <div class="page-grain" aria-hidden="true"></div>
+  <svg id="smoke-atmosphere" class="smoke-atmosphere" aria-hidden="true" viewBox="0 0 1600 1000"
+    preserveAspectRatio="xMidYMid slice">
+    <defs>
+      <filter id="volumetric-smoke" x="-35%" y="-35%" width="170%" height="170%" color-interpolation-filters="sRGB">
+        <feTurbulence type="fractalNoise" baseFrequency="0.008 0.018" numOctaves="3" seed="19" result="noise">
+          <animate attributeName="baseFrequency" dur="22s" values="0.007 0.016;0.012 0.026;0.007 0.016"
+            repeatCount="indefinite" />
+        </feTurbulence>
+        <feDisplacementMap in="SourceGraphic" in2="noise" scale="92" xChannelSelector="R" yChannelSelector="G"
+          result="warped" />
+        <feGaussianBlur in="warped" stdDeviation="15" />
+      </filter>
+      <radialGradient id="smoke-green">
+        <stop offset="0" stop-color="#7dffad" stop-opacity=".25" />
+        <stop offset=".34" stop-color="#2fae61" stop-opacity=".16" />
+        <stop offset=".72" stop-color="#14532f" stop-opacity=".07" />
+        <stop offset="1" stop-color="#0a1a10" stop-opacity="0" />
+      </radialGradient>
+      <radialGradient id="smoke-pale">
+        <stop offset="0" stop-color="#c5e8ce" stop-opacity=".12" />
+        <stop offset=".42" stop-color="#4c9e68" stop-opacity=".09" />
+        <stop offset="1" stop-color="#173c25" stop-opacity="0" />
+      </radialGradient>
+    </defs>
+    <g class="smoke-plume plume-a" filter="url(#volumetric-smoke)">
+      <path fill="url(#smoke-green)"
+        d="M-180 1040 C-40 850 -110 720 35 610 C170 505 65 410 205 300 C330 205 250 90 420 -90 C360 160 505 235 385 390 C280 525 420 625 260 760 C170 860 145 960 210 1100Z" />
+      <path fill="url(#smoke-pale)"
+        d="M-80 1030 C60 850 20 740 155 620 C270 515 190 410 320 300 C420 210 390 80 520 -70 C470 170 590 270 485 420 C380 570 520 665 370 820 C280 920 300 990 360 1080Z" />
+    </g>
+    <g class="smoke-plume plume-b" filter="url(#volumetric-smoke)">
+      <path fill="url(#smoke-green)"
+        d="M1180 1080 C1300 900 1180 790 1320 660 C1450 540 1340 420 1480 300 C1600 200 1510 80 1690 -90 C1620 170 1760 250 1650 420 C1530 590 1690 680 1530 830 C1450 920 1460 1010 1510 1100Z" />
+      <path fill="url(#smoke-pale)"
+        d="M1050 1080 C1160 890 1080 780 1190 640 C1310 500 1220 410 1340 280 C1450 170 1390 70 1510 -80 C1470 170 1580 260 1480 430 C1380 580 1510 690 1370 830 C1290 920 1300 1000 1350 1100Z" />
+    </g>
+    <g class="smoke-plume plume-center" filter="url(#volumetric-smoke)">
+      <path fill="url(#smoke-green)"
+        d="M480 1080 C590 930 500 820 640 700 C760 600 680 500 810 390 C940 280 850 170 1020 -60 C960 190 1080 280 970 440 C850 600 1000 690 850 830 C770 920 780 1000 840 1100Z" />
+    </g>
+  </svg>
+  <div class="scroll-progress" aria-hidden="true"><span id="progress-bar"></span></div>
+
+  <header class="site-header" id="top">
+    <a class="brand" href="#top" aria-label="The Heisenberg Files home">
+      <span class="brand-mark">H<span>²</span></span>
+      <span class="brand-copy"><b>THE HEISENBERG FILES</b><small>AN UNOFFICIAL FAN EXPERIENCE</small></span>
+    </a>
+    <button class="menu-toggle" id="menu-toggle" aria-label="Open navigation" aria-expanded="false"
+      aria-controls="primary-nav">
+      <span></span><span></span>
+    </button>
+    <nav class="primary-nav" id="primary-nav" aria-label="Primary navigation">
+      <a href="#story">THE STORY</a>
+      <a href="#elements">THE ELEMENTS</a>
+      <a href="#timeline">TIMELINE</a>
+      <a href="#quote">THE CODE</a>
+    </nav>
+    <div class="audio-controller" id="audio-controller">
+      <button class="audio-toggle-btn" id="audio-toggle-btn" aria-label="Toggle Audio" aria-pressed="false" title="Toggle audio (Press 'M')">
+        <span class="audio-bars" aria-hidden="true">
+          <i></i><i></i><i></i>
+        </span>
+        <span class="audio-label">OFF</span>
+      </button>
+      <div class="audio-volume-popover" id="audio-volume-popover">
+        <span class="volume-tag">VOL</span>
+        <input type="range" id="audio-volume-slider" min="0" max="1" step="0.01" value="0.6" aria-label="Volume" />
+        <span id="volume-readout" class="volume-readout">60%</span>
+      </div>
+    </div>
+    <a class="header-stamp" href="#files"><span class="stamp-dot"></span> CLASSIFIED <span class="stamp-line">/
+        05</span></a>
+  </header>
+
+  <main>
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-sticky-stage">
+        <div class="hero-topline"><span>ALBUQUERQUE, NEW MEXICO</span><span>35°05' N&nbsp;&nbsp; 106°39'
+            W</span><span>CASE FILE&nbsp; // &nbsp;2008—2013</span></div>
+        <div class="hero-art-wrap">
+          <div class="hero-orbit orbit-one" aria-hidden="true"></div>
+          <div class="hero-orbit orbit-two" aria-hidden="true"></div>
+          <div class="hero-copy">
+            <div class="hero-wordmark" role="heading" aria-level="2" aria-label="Breaking Bad">
+              <div class="hero-wordmark-line"><span class="hero-element">Br<sup>35</sup></span><span class="wm-letters"
+                  aria-hidden="true"><i style="--i:0">e</i><i style="--i:1">a</i><i style="--i:2">k</i><i
+                    style="--i:3">i</i><i style="--i:4">n</i><i style="--i:5">g</i></span></div>
+              <div class="hero-wordmark-line"><span class="hero-element">Ba<sup>56</sup></span><span class="wm-letters"
+                  aria-hidden="true"><i style="--i:8">d</i></span></div>
+            </div>
+            <p class="hero-quote">“I am the one who <em>knocks.</em>”</p>
+            <span class="hero-quote-credit">— HEISENBERG</span>
+            <span class="hero-copy-rule" aria-hidden="true"></span>
+          </div>
+          <figure class="hero-art" id="hero-art" role="img" aria-label="Illustrated portrait of Heisenberg">
+            <div class="hero-shards" id="hero-shards" aria-hidden="true"></div>
+            <div class="art-scanline" aria-hidden="true"></div>
+          </figure>
+          <div class="hero-coordinate coordinate-left">FIG. 01<br /><b>THE ALTER EGO</b></div>
+          <div class="hero-coordinate coordinate-right">SUBJECT: W.W.<br /><b>STATUS: UNKNOWN</b></div>
+        </div>
+        <div class="hero-bottomline">
+          <span class="hero-caption">ONE MAN. TWO IDENTITIES. A LEGACY THAT WON'T DISSOLVE.</span>
+        </div>
+        <button class="scroll-cue assemble-btn" id="assemble-btn" type="button" aria-label="Assemble portrait"><span>ASSEMBLE</span><span class="cue-line"></span></button>
+          <span class="hero-index">01 <i>/</i> 04</span>
+      </div>
+      <h1 id="hero-title" class="sr-only">The Heisenberg Files — a Breaking Bad experience</h1>
+    </section>
+
+    <section class="intro-section section-shell" id="story">
+      <div class="section-kicker reveal"><span class="kicker-line"></span> <span>01 — THE TRANSFORMATION</span></div>
+      <div class="intro-grid">
+        <div class="intro-heading reveal">
+          <p class="eyebrow">A STUDY IN CONSEQUENCE</p>
+          <h2>Some lines<br />are <em>crossed.</em></h2>
+          <div class="heading-rule"><span></span><span></span><span></span></div>
+        </div>
+        <div class="intro-copy reveal">
+          <p class="large-copy">It started with a diagnosis. It became an empire.</p>
+          <p>Behind the glasses was a man who spent years being overlooked. One decision led to another, until the
+            chemistry teacher became a name whispered across the desert.</p>
+          <a class="text-link" href="#timeline"><span>TRACE THE DESCENT</span><b>↗</b></a>
+        </div>
+      </div>
+      <div class="stat-strip reveal" id="files">
+        <div class="stat-cell"><span class="stat-value" data-count="5">05</span><span class="stat-label">SEASONS</span>
+        </div>
+        <div class="stat-cell"><span class="stat-value" data-count="62">62</span><span
+            class="stat-label">EPISODES</span></div>
+        <div class="stat-cell"><span class="stat-value">99.1<span class="tiny">%</span></span><span
+            class="stat-label">PURITY</span></div>
+        <div class="stat-cell stat-note"><span class="tiny-label">EVIDENCE LOG</span><span>THE DETAILS<br />WERE ALWAYS
+            THERE.</span></div>
+      </div>
+    </section>
+
+    <section class="elements-section section-shell" id="elements">
+      <div class="section-kicker reveal"><span class="kicker-line"></span> <span>02 — THE PERIODIC TABLE</span></div>
+      <div class="elements-head reveal">
+        <div>
+          <p class="eyebrow">THE SCIENCE OF IT ALL</p>
+          <h2>It's all about<br /><em>chemistry.</em></h2>
+        </div>
+        <p class="elements-aside">Every element has a property.<br />Every choice has a reaction.</p>
+      </div>
+      <div class="periodic-layout reveal">
+        <button class="element-tile tile-green" data-element="br" aria-pressed="true">
+          <span class="atomic-number">35</span><strong>Br</strong><span class="element-name">BROMINE</span><span
+            class="element-weight">79.904</span>
+        </button>
+        <button class="element-tile tile-gold" data-element="ba" aria-pressed="false">
+          <span class="atomic-number">56</span><strong>Ba</strong><span class="element-name">BARIUM</span><span
+            class="element-weight">137.327</span>
+        </button>
+        <div class="element-explainer" aria-live="polite">
+          <span class="tiny-label">SELECTED ELEMENT / <b id="element-symbol">Br</b></span>
+          <h3 id="element-title">A name hidden in plain sight.</h3>
+          <p id="element-description">Bromine and Barium. Two symbols that break a title into its most recognisable
+            pieces — a quiet nod to the chemistry at the heart of the story.</p>
+          <span class="element-hint">SELECT A TILE TO DECODE IT <span>↗</span></span>
+        </div>
+        <div class="chem-ghost" aria-hidden="true">01<br /><span>H</span></div>
+      </div>
+    </section>
+
+    <section class="cook-section section-shell" id="cook">
+      <div class="section-kicker reveal"><span class="kicker-line"></span> <span>THE COOK</span></div>
+      <div class="cook-header reveal">
+        <p class="eyebrow">BLUE PRODUCT PURITY</p>
+        <h2>The <em>cook.</em></h2>
+        <p class="cook-subtext">Drag the slider to raise the purity. Click anywhere on the page to scatter the crystals.</p>
+      </div>
+
+      <div class="cook-stage reveal">
+        <div class="cook-crystal-wrap" aria-hidden="true">
+          <div class="cook-crystal-shape" id="cook-crystal-preview">
+            <svg class="cook-crystal-svg" viewBox="0 0 160 190" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <filter id="cook-glow" x="-45%" y="-45%" width="190%" height="190%">
+                  <feDropShadow dx="0" dy="0" stdDeviation="16" flood-color="#00f0ff" id="cook-shadow" flood-opacity="0.9" />
+                </filter>
+              </defs>
+              <g filter="url(#cook-glow)" id="cook-crystal-group">
+                <polygon points="80,8 152,72 124,182 36,182 8,72" fill="#00e5ff" id="cook-poly-base" />
+                <polygon points="80,8 152,72 80,105 8,72" fill="#7ceeff" opacity="0.32" />
+                <polygon points="80,105 124,182 36,182" fill="#009edb" opacity="0.45" />
+                <polygon points="8,72 80,105 36,182" fill="#0077b6" opacity="0.3" />
+                <polyline points="80,8 80,105 36,182" stroke="#ffffff" stroke-width="1.2" opacity="0.8" />
+                <polyline points="80,105 124,182" stroke="#bdf6ff" stroke-width="1" opacity="0.75" />
+                <polyline points="8,72 80,105 152,72" stroke="#d4f9ff" stroke-width="1" opacity="0.75" />
+                <polygon points="80,8 152,72 124,182 36,182 8,72" fill="none" stroke="#d4f9ff" stroke-width="1.5" opacity="0.95" />
+              </g>
+            </svg>
+          </div>
+        </div>
+
+        <div class="cook-details">
+          <div class="cook-purity-display">
+            <span class="cook-purity-number" id="cook-purity-num">100.0</span><span class="cook-purity-symbol">%</span>
+          </div>
+          <p class="cook-caption">Blue. This is the product that built the empire.</p>
+          <div class="cook-slider-box">
+            <input type="range" class="cook-slider" id="cursor-purity-slider" min="10" max="100" value="100" step="0.5" aria-label="Cursor intensity and purity slider" />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="quote-section" id="quote">
+      <div class="quote-backdrop" aria-hidden="true">I AM THE ONE</div>
+      <div class="quote-content reveal">
+        <span class="quote-mark">“</span>
+        <blockquote>I am the one<br />who <em>knocks.</em></blockquote>
+        <div class="quote-meta"><span class="quote-rule"></span><span>WALTER
+            WHITE</span><span>—</span><span>HEISENBERG</span></div>
+      </div>
+      <div class="quote-side-note">A MOMENT THAT CHANGED EVERYTHING <span>2009 / S04</span></div>
+    </section>
+
+    <section class="timeline-section section-shell" id="timeline">
+      <div class="section-kicker reveal"><span class="kicker-line"></span> <span>03 — THE DESCENT</span></div>
+      <div class="timeline-heading reveal">
+        <div>
+          <p class="eyebrow">A CHANGE IN COMPOSITION</p>
+          <h2>Every empire<br />has an <em>origin.</em></h2>
+        </div>
+        <p class="timeline-intro">Move through the turning points. The person at the end is not the person who began.
+        </p>
+      </div>
+      <div class="timeline-tabs reveal" role="tablist" aria-label="Story timeline">
+        <button class="era-tab is-active" id="tab-one" role="tab" aria-selected="true" aria-controls="era-panel"
+          data-era="0"><span>01</span><b>THE TEACHER</b><i>2008</i></button>
+        <button class="era-tab" id="tab-two" role="tab" aria-selected="false" aria-controls="era-panel"
+          data-era="1"><span>02</span><b>THE COOK</b><i>2009</i></button>
+        <button class="era-tab" id="tab-three" role="tab" aria-selected="false" aria-controls="era-panel"
+          data-era="2"><span>03</span><b>THE KINGPIN</b><i>2011</i></button>
+        <button class="era-tab" id="tab-four" role="tab" aria-selected="false" aria-controls="era-panel"
+          data-era="3"><span>04</span><b>THE LEGACY</b><i>2013</i></button>
+      </div>
+      <article class="era-panel reveal" id="era-panel" role="tabpanel" aria-labelledby="tab-one">
+        <div class="era-number" id="era-number">01<span>/04</span></div>
+        <div class="era-copy"><span class="tiny-label" id="era-label">THE ORDINARY LIFE</span>
+          <h3 id="era-title">A quiet man<br />with a breaking point.</h3>
+          <p id="era-description">A gifted chemist turned high-school teacher faces a future he never planned for. The
+            first step feels like survival — until it becomes something else.</p>
+        </div>
+        <div class="era-visual" aria-hidden="true">
+          <div class="visual-ring"></div>
+          <div class="visual-core" id="visual-core">W.W.</div><span class="visual-caption">COMPOUND <b
+              id="visual-code">001</b></span>
+        </div>
+      </article>
+    </section>
+
+    <section class="closing-section">
+      <div class="closing-inner reveal">
+        <p class="eyebrow">THE FILE IS NEVER REALLY CLOSED</p>
+        <h2>Say my <em>name.</em></h2>
+        <p class="closing-copy">Some stories don't leave the room when the screen goes black.</p>
+        <a class="closing-button" href="#top"><span>BACK TO THE BEGINNING</span><b>↑</b></a>
+      </div>
+      <div class="closing-stamp" aria-hidden="true">HEISENBERG<br /><span>EST. 2008</span></div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <a class="footer-brand" href="#top">H<span>²</span></a>
+    <p>AN UNOFFICIAL FAN-MADE TRIBUTE.<br />ALL SERIES REFERENCES BELONG TO THEIR RESPECTIVE RIGHTSHOLDERS.</p>
+    <a href="#top" class="footer-top">RETURN TO TOP ↑</a>
+    <span class="footer-year">© <span id="year"></span></span>
+  </footer>
+  <button class="back-to-top" id="back-to-top" aria-label="Back to top">↑</button>
+</body>
+
+</html>
